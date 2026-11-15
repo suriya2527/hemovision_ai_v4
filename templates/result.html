@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block title %}Result · HEMOVISION AI{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap gap-2 align-items-center mb-3"><h2 class="fw-bold mb-0">Anemia Screening Result</h2>
+  <div class="d-flex gap-2"><a class="btn btn-wine" href="{{ url_for('report', sid=s.id) }}">DOWNLOAD REPORT</a><a class="btn btn-line" href="{{ url_for('dashboard') }}">DASHBOARD</a></div></div>
+{% if s.model_mode == "Demo Mode" %}<div class="alert"><strong>Demo Mode</strong> – ML model not connected. Demonstration result only.</div>{% endif %}
+<div class="row g-3">
+  <div class="col-lg-8"><div class="hv-card p-4 h-100">
+    <div class="row small sage mb-3"><div class="col-6 col-md-3">Patient<div class="fw-semibold text-dark">{{ user.full_name }}</div></div><div class="col-3 col-md-2">Age<div class="fw-semibold text-dark">{{ user.age }}</div></div>
+      <div class="col-3 col-md-2">Gender<div class="fw-semibold text-dark">{{ user.gender }}</div></div><div class="col-12 col-md-5">Screening Date<div class="fw-semibold text-dark">{{ s.screening_date.strftime("%d %b %Y, %H:%M") }}</div></div></div>
+    <div class="sage small">Result</div><div class="display-6 fw-bold wine">{{ "Possible Anemia Risk Detected" if s.is_higher else "Low Anemia Risk" }}</div>
+    <div class="mt-2"><span class="pill {{ 'hi' if s.is_higher }}">{{ s.risk_level }}</span> <span class="ms-2">Confidence <strong>{{ "%d" % (s.confidence*100) }}%</strong></span></div>
+    {% if s.model_mode == "Synthetic ML Prototype" %}<div class="small sage mt-2">Prototype prediction generated using a synthetic-data ML model · not clinically validated.</div>{% endif %}
+    {% if s.is_higher %}<p class="mt-3 mb-0">Possible anemia-related characteristics were detected in the captured conjunctiva image. This is a screening indication, not a diagnosis.</p>
+    {% else %}<p class="mt-3 mb-0">Low anemia screening risk was identified by this prototype.<br>This screening result does not rule out anemia. A hemoglobin/CBC test is required for confirmation.</p>{% endif %}
+  </div></div>
+  <div class="col-lg-4"><div class="hv-card p-3 h-100 text-center"><img src="{{ url_for('image', sid=s.id) }}" class="img-fluid rounded" alt="Captured image"><small class="sage">Captured image</small></div></div>
+</div>
+<div class="hv-card plain p-4 mt-3"><h5>Image Processing</h5><div class="row g-3 text-center"><div class="col-4"><img src="{{ url_for('image', sid=s.id) }}" class="img-fluid rounded w-100" style="height:180px;object-fit:cover" alt="Captured"><small class="sage d-block mt-1">Captured</small></div><div class="col-4"><img src="{{ url_for('image_view', sid=s.id, kind='gray') }}" class="img-fluid rounded w-100" style="height:180px;object-fit:cover" alt="Grayscale (ROI)"><small class="sage d-block mt-1">Grayscale (ROI)</small></div><div class="col-4"><img src="{{ url_for('image_view', sid=s.id, kind='enhanced') }}" class="img-fluid rounded w-100" style="height:180px;object-fit:cover" alt="Contrast Enhanced (CLAHE)"><small class="sage d-block mt-1">Contrast Enhanced (CLAHE)</small></div></div></div>
+{% if s.is_higher %}<div class="hv-card plain p-4 mt-3"><h5>General Wellness Tips</h5><ul class="mb-2">{% for t in tips %}<li>{{ t }}</li>{% endfor %}</ul><small class="sage">{{ tips_note }}</small></div>{% else %}<div class="hv-card plain p-4 mt-3"><h5>General Wellness Tips</h5><ul class="mb-2"><li>Maintain a balanced diet that includes iron-containing foods and vitamin C sources.</li><li>Stay hydrated and keep up regular health check-ups.</li><li>Discuss persistent tiredness, dizziness, or breathlessness with a qualified healthcare professional.</li></ul><small class="sage">{{ tips_note }}</small></div>{% endif %}
+<div class="hv-card plain p-4 mt-3"><h5>Compared with previous screening</h5>
+  {% if cmp %}<div class="row text-center my-2"><div class="col-4 stat"><div class="l">Previous</div><div class="v">{{ cmp.previous }}%</div></div><div class="col-4 stat"><div class="l">Current</div><div class="v">{{ cmp.current }}%</div></div><div class="col-4 stat"><div class="l">Change</div><div class="v">{{ "%+d" % cmp.change }}%</div></div></div><p>{{ cmp.message }}</p>
+  {% else %}<p>This is your first recorded screening. Future screenings will appear here for comparison.</p>{% endif %}
+  <canvas id="trendChart" data-quiet="1" height="80"></canvas></div>
+<p class="mt-3"><a class="wine fw-semibold" data-bs-toggle="collapse" href="#tech" role="button">View Technical Details</a></p>
+<div class="collapse" id="tech"><div class="hv-card plain p-3"><table class="table table-sm mb-0">{% for k, v in s.features.items() %}<tr><td>{{ k.replace("_"," ").title() }}</td><td>{{ "%.4f" % v }}</td></tr>{% endfor %}</table></div></div>
+<p class="footer mt-4">This is an academic research prototype and the prediction is not a clinical diagnosis. Confirmatory hemoglobin or CBC testing is required.</p>
+{% endblock %}
+{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script><script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

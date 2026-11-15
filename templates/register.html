@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}Create Account · HEMOVISION AI{% endblock %}
+{% block body %}
+<div class="container py-5" style="max-width:640px"><h2 class="mb-1">Create account</h2><p class="sage">Patient registration</p>{% include "_flash.html" %}
+<form method="post" class="hv-card p-4 row g-3 fade-in"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="col-12"><input class="form-control" name="full_name" placeholder="Full Name" value="{{ form.get('full_name','') }}" required></div>
+  <div class="col-md-6"><input class="form-control" type="email" name="email" placeholder="Email" value="{{ form.get('email','') }}" required></div>
+  <div class="col-md-6"><input class="form-control" name="username" placeholder="Username" value="{{ form.get('username','') }}" required></div>
+  <div class="col-md-6"><input class="form-control" type="password" name="password" placeholder="Password" required></div>
+  <div class="col-md-6"><input class="form-control" type="password" name="confirm" placeholder="Confirm Password" required></div>
+  <div class="col-md-4"><input class="form-control" type="number" min="1" max="120" name="age" placeholder="Age" value="{{ form.get('age','') }}" required></div>
+  <div class="col-md-4"><select class="form-select" name="gender" required><option value="">Gender</option>{% for g in ["Male","Female","Other"] %}<option {{ 'selected' if form.get('gender')==g }}>{{ g }}</option>{% endfor %}</select></div>
+  <div class="col-md-4"><select class="form-select" name="blood_group"><option value="">Blood group (optional)</option>{% for b in ["A+","A-","B+","B-","AB+","AB-","O+","O-"] %}<option {{ 'selected' if form.get('blood_group')==b }}>{{ b }}</option>{% endfor %}</select></div>
+  <div class="col-12"><input class="form-control" name="phone" placeholder="Phone Number" value="{{ form.get('phone','') }}" required></div>
+  <div class="col-12 d-flex gap-2"><button class="btn btn-wine">CREATE ACCOUNT</button><a class="btn btn-line" href="{{ url_for('login') }}">LOGIN</a></div>
+</form></div>
+{% endblock %}

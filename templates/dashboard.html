@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Dashboard · HEMOVISION AI{% endblock %}
+{% block content %}
+<h2 class="fw-bold">Welcome, {{ user.full_name }}</h2>
+<div class="row g-3 my-2">
+  {% for l, v in [("Latest Result", latest.prediction if latest else "—"), ("Latest Screening", latest.screening_date.strftime("%d %b %Y") if latest else "—"),
+                  ("Confidence", ("%d%%" % (latest.confidence*100)) if latest else "—"), ("Total Screenings", total)] %}
+  <div class="col-6 col-lg-3"><div class="hv-card lift stat p-3 h-100"><div class="l">{{ l }}</div><div class="v">{{ v }}</div></div></div>{% endfor %}
+</div>
+<div class="d-flex flex-wrap gap-2 my-3">
+  <a class="btn btn-wine" href="{{ url_for('screening') }}">NEW SCREENING</a>
+  <a class="btn btn-line" href="{{ url_for('history') }}">VIEW HISTORY</a>
+  {% if latest %}<a class="btn btn-sage" href="{{ url_for('report', sid=latest.id) }}">DOWNLOAD LATEST REPORT</a>{% endif %}
+</div>
+<div class="hv-card plain p-4 mb-4"><h5>Anemia Screening Trend</h5>
+  <div class="row text-center my-2" id="cmpBox"></div><canvas id="trendChart" height="90"></canvas><p id="trendNote" class="mt-3 mb-0 sage"></p></div>
+{% if recent %}<div class="hv-card plain p-3"><h6>Recent screenings</h6><table class="table align-middle mb-0"><tbody>
+{% for s in recent %}<tr><td>{{ s.screening_date.strftime("%d %b %Y") }}</td><td>{{ s.prediction }}</td><td><span class="pill {{ 'hi' if s.is_higher }}">{{ s.risk_level }}</span></td><td class="text-end"><a href="{{ url_for('result', sid=s.id) }}">View result</a></td></tr>{% endfor %}
+</tbody></table></div>{% endif %}
+{% endblock %}
+{% block scripts %}<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script><script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

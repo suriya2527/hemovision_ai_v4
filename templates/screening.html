@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block title %}New Screening · HEMOVISION AI{% endblock %}
+{% block content %}
+<h2 class="fw-bold">New Anemia Screening</h2>
+<p class="sage">Gently pull down the lower eyelid and position the conjunctiva inside the guide.</p>
+<div class="stepper"><div id="s1" class="active">1 · Position Eye</div><div id="s2">2 · Capture Image</div><div id="s3">3 · Analyze</div></div>
+<div id="errBox" class="alert d-none"></div>
+<div class="hv-card p-3 p-md-4">
+  <div class="cam"><video id="video" autoplay playsinline muted class="d-none"></video><img id="preview" class="d-none" alt="Captured image">
+    <div id="off" class="off">Camera is off</div><div id="guide" class="guide d-none"></div></div>
+  <div class="d-flex flex-wrap justify-content-center gap-2 my-3">
+    <span class="chip">Camera <b id="stCam">Off</b></span><span class="chip">Lighting <b id="stLight">—</b></span><span class="chip">Image Quality <b id="stQual">—</b></span></div>
+  <div class="text-center">
+    <div id="grpLive"><button id="btnOpen" class="btn btn-wine me-2">OPEN CAMERA</button><button id="btnCapture" class="btn btn-line" disabled>CAPTURE IMAGE</button></div>
+    <div id="grpShot" class="d-none"><button id="btnRetake" class="btn btn-line me-2">RETAKE</button><button id="btnAnalyze" class="btn btn-wine">ANALYZE IMAGE</button></div></div>
+  <canvas id="canvas" class="d-none"></canvas>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/camera.js') }}"></script>{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}Login · HEMOVISION AI{% endblock %}
+{% block body %}
+<div class="row g-0 auth">
+  <div class="col-lg-6 auth-left d-flex flex-column justify-content-center align-items-center text-center p-5">
+    <svg width="150" viewBox="0 0 120 70" fill="none" stroke="#E8D2B5" stroke-width="3"><path d="M5 35C25 8 95 8 115 35 95 62 25 62 5 35Z"/><circle cx="60" cy="35" r="15"/><circle cx="60" cy="35" r="6" fill="#E8D2B5"/></svg>
+    <h1 class="mt-4 fw-bold">HEMOVISION AI</h1><p class="lead mb-0">AI-Assisted Anemia Screening</p>
+  </div>
+  <div class="col-lg-6 d-flex align-items-center justify-content-center p-4">
+    <div class="auth-card fade-in"><h3 class="mb-3">Welcome back</h3>{% include "_flash.html" %}
+      <form method="post" class="d-grid gap-3"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input class="form-control" name="identifier" placeholder="Email / Username" required autofocus>
+        <input class="form-control" type="password" name="password" placeholder="Password" required>
+        <button class="btn btn-wine">LOGIN</button>
+        <a class="btn btn-line" href="{{ url_for('register') }}">CREATE ACCOUNT</a>
+        <a class="small text-center sage" href="{{ url_for('forgot') }}">Forgot Password</a></form>
+      <p class="footer text-center mt-4">Research Prototype · Not a medical diagnosis</p></div></div></div>
+{% endblock %}

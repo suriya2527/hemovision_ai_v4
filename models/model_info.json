@@ -1,0 +1,22 @@
+{
+ "trained_on": "synthetic",
+ "features": [
+  "age",
+  "gender_encoded",
+  "mean_intensity",
+  "std_intensity",
+  "contrast",
+  "homogeneity",
+  "energy",
+  "correlation",
+  "entropy"
+ ],
+ "metrics": {
+  "accuracy": 0.8988,
+  "precision": 0.8526,
+  "recall": 0.8837,
+  "f1": 0.8679,
+  "roc_auc": 0.9636
+ },
+ "note": "Synthetic-data prototype model - not clinically validated."
+}
